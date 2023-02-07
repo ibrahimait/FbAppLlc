@@ -1,0 +1,196 @@
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS `Bon_cadeau`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Bon_cadeau` (
+  `id_bonCadeau` int(11) NOT NULL AUTO_INCREMENT,
+  `nom_destinataire` varchar(50) DEFAULT NULL,
+  `titre` varchar(50) DEFAULT NULL,
+  `message` varchar(50) DEFAULT NULL,
+  `id_experience` int(11) NOT NULL,
+  PRIMARY KEY (`id_bonCadeau`),
+  KEY `id_experience` (`id_experience`),
+  CONSTRAINT `Bon_cadeau_ibfk_1` FOREIGN KEY (`id_experience`) REFERENCES `Experience` (`id_experience`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `Contact`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Contact` (
+  `id_contact` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(50) DEFAULT NULL,
+  `prenom` varchar(50) DEFAULT NULL,
+  `tel` char(10) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `adresse` varchar(50) DEFAULT NULL,
+  `code_postale` char(5) DEFAULT NULL,
+  `ville` varchar(50) DEFAULT NULL,
+  `url_contact_folder` varchar(50) DEFAULT NULL,
+  `id_client_stripe` varchar(50) DEFAULT NULL,
+  `url_client_stripe` varchar(50) DEFAULT NULL,
+  `id_CSE` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_contact`),
+  KEY `id_CSE` (`id_CSE`),
+  CONSTRAINT `Contact_ibfk_1` FOREIGN KEY (`id_CSE`) REFERENCES `Cse` (`id_CSE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `Content_experience`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Content_experience` (
+  `id_content` varchar(50) NOT NULL,
+  `type_content` varchar(50) DEFAULT NULL,
+  `description` varchar(50) DEFAULT NULL,
+  `url_content` varchar(50) DEFAULT NULL,
+  `id_experience` int(11) NOT NULL,
+  PRIMARY KEY (`id_content`),
+  KEY `id_experience` (`id_experience`),
+  CONSTRAINT `Content_experience_ibfk_1` FOREIGN KEY (`id_experience`) REFERENCES `Experience` (`id_experience`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `Cse`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Cse` (
+  `id_CSE` int(11) NOT NULL,
+  `nom_entreprise` varchar(50) DEFAULT NULL,
+  `num_cse` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_CSE`),
+  UNIQUE KEY `num_cse` (`num_cse`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `Experience`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Experience` (
+  `id_experience` int(11) NOT NULL AUTO_INCREMENT,
+  `nom_experience` varchar(50) DEFAULT NULL,
+  `statut_experience` enum('Prise d''information','Demande de réservation','Validation réservation','Attente de paiement','Payement validé','Bon cadeau réalisé','Attente présentation','Présentation Exp Llc','Validation chanson','Date Enregistrement Programmée','Enregistrement','Mixage','Additional Content','Création Pack envoie','Envoyé','Méta Fin') DEFAULT NULL,
+  `histoire_experience` varchar(50) DEFAULT NULL,
+  `url_experience_folder` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_experience`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `Factures`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Factures` (
+  `num_facture` int(11) NOT NULL AUTO_INCREMENT,
+  `description` text NOT NULL,
+  `nb_experimentateur` int(11) NOT NULL,
+  `nb_chanson` int(11) NOT NULL,
+  `statut_facture` enum('A créer','Créée','Envoyé','Attente de paiement','Payée','Non Payée','Annulée','En Retard') DEFAULT NULL,
+  `prix_total` int(50) DEFAULT NULL,
+  `id_stripe` varchar(50) DEFAULT NULL,
+  `url_facture` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`num_facture`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `Notification_Automation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Notification_Automation` (
+  `id_notification` varchar(50) NOT NULL,
+  `date_heure` varchar(50) DEFAULT NULL,
+  `description` varchar(50) DEFAULT NULL,
+  `id_contact` int(11) NOT NULL,
+  PRIMARY KEY (`id_notification`),
+  KEY `id_contact` (`id_contact`),
+  CONSTRAINT `Notification_Automation_ibfk_1` FOREIGN KEY (`id_contact`) REFERENCES `Contact` (`id_contact`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `Produits_Services`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Produits_Services` (
+  `Id_produit` int(50) NOT NULL AUTO_INCREMENT,
+  `nom_produit` varchar(50) DEFAULT NULL,
+  `Prix` int(50) NOT NULL,
+  `id_stripe_produit` varchar(50) NOT NULL,
+  PRIMARY KEY (`Id_produit`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `Storytelling_experience`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Storytelling_experience` (
+  `id_storytelling` varchar(50) NOT NULL,
+  `date_heure` varchar(50) DEFAULT NULL,
+  `description` varchar(50) DEFAULT NULL,
+  `id_experience` int(11) NOT NULL,
+  PRIMARY KEY (`id_storytelling`),
+  KEY `id_experience` (`id_experience`),
+  CONSTRAINT `Storytelling_experience_ibfk_1` FOREIGN KEY (`id_experience`) REFERENCES `Experience` (`id_experience`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `contact_experience`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contact_experience` (
+  `id_experience` int(11) NOT NULL,
+  `id_contact` int(11) NOT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_experience`,`id_contact`),
+  KEY `id_contact` (`id_contact`),
+  CONSTRAINT `contact_experience_ibfk_1` FOREIGN KEY (`id_experience`) REFERENCES `Experience` (`id_experience`),
+  CONSTRAINT `contact_experience_ibfk_2` FOREIGN KEY (`id_contact`) REFERENCES `Contact` (`id_contact`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `contact_facture`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contact_facture` (
+  `id_contact` int(11) NOT NULL,
+  `num_facture` int(11) NOT NULL,
+  PRIMARY KEY (`id_contact`,`num_facture`),
+  KEY `num_facture` (`num_facture`),
+  CONSTRAINT `contact_facture_ibfk_1` FOREIGN KEY (`id_contact`) REFERENCES `Contact` (`id_contact`),
+  CONSTRAINT `contact_facture_ibfk_2` FOREIGN KEY (`num_facture`) REFERENCES `Factures` (`num_facture`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `facture_experience`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `facture_experience` (
+  `id_experience` int(11) NOT NULL,
+  `num_facture` int(11) NOT NULL,
+  PRIMARY KEY (`id_experience`,`num_facture`),
+  KEY `num_facture` (`num_facture`),
+  CONSTRAINT `facture_experience_ibfk_1` FOREIGN KEY (`id_experience`) REFERENCES `Experience` (`id_experience`),
+  CONSTRAINT `facture_experience_ibfk_2` FOREIGN KEY (`num_facture`) REFERENCES `Factures` (`num_facture`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `migrations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(191) NOT NULL,
+  `batch` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `produit_facture`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `produit_facture` (
+  `num_facture` int(11) NOT NULL,
+  `Id_produit` int(11) NOT NULL,
+  PRIMARY KEY (`num_facture`,`Id_produit`),
+  KEY `Id_produit` (`Id_produit`),
+  CONSTRAINT `produit_facture_ibfk_1` FOREIGN KEY (`num_facture`) REFERENCES `Factures` (`num_facture`),
+  CONSTRAINT `produit_facture_ibfk_2` FOREIGN KEY (`Id_produit`) REFERENCES `Produits_Services` (`Id_produit`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
